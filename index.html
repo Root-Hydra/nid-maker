@@ -3,198 +3,174 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BDCS ID Generator</title>
+    <title>Professional NID Card Generator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* CSS Section */
-        body {
-            background-color: #0d1117;
-            color: #00ff41;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px;
-        }
-
-        h2 { text-shadow: 0 0 10px #00ff41; }
-
-        .container {
-            width: 100%;
-            max-width: 650px;
-            text-align: center;
-        }
-
-        .card-box {
-            background: #161b22;
-            padding: 10px;
-            border: 2px solid #00ff41;
-            border-radius: 12px;
-            margin-bottom: 25px;
-            box-shadow: 0 0 20px rgba(0, 255, 65, 0.3);
-            display: flex;
-            justify-content: center;
-        }
-
-        canvas {
-            max-width: 100%;
-            height: auto;
-            border-radius: 5px;
-        }
-
-        .form-container {
-            display: grid;
-            gap: 12px;
-            background: #161b22;
-            padding: 20px;
-            border-radius: 10px;
-            border: 1px solid #30363d;
-        }
-
-        input {
-            background: #0d1117;
-            border: 1px solid #30363d;
-            padding: 12px;
-            color: #fff;
-            border-radius: 6px;
-            font-size: 14px;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: #00ff41;
-            box-shadow: 0 0 8px rgba(0, 255, 65, 0.5);
-        }
-
-        .button-group {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin-top: 15px;
-        }
-
-        button {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 16px;
-            transition: 0.3s;
-        }
-
-        .gen-btn { background: #00ff41; color: #000; }
-        .gen-btn:hover { background: #00cc33; transform: scale(1.02); }
-
-        .down-btn { background: #21262d; color: #c9d1d9; border: 1px solid #30363d; }
-        .down-btn:hover { background: #30363d; color: #fff; }
-
-        label {
-            text-align: left;
-            font-size: 12px;
-            color: #8b949e;
-            margin-bottom: -8px;
-            margin-left: 5px;
-        }
+        body { background-color: #0d1117; color: #00ff41; font-family: 'Segoe UI', sans-serif; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+        .canvas-container { background: #fff; padding: 10px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 0 30px rgba(0,255,65,0.2); }
+        .editor-panel { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; background: #161b22; padding: 25px; border-radius: 12px; width: 100%; max-width: 900px; border: 1px solid #30363d; }
+        input { background: #0d1117; border: 1px solid #30363d; padding: 12px; color: #fff; border-radius: 6px; outline: none; }
+        button { grid-column: span 2; padding: 15px; background: #00ff41; border: none; font-weight: bold; cursor: pointer; border-radius: 6px; font-size: 18px; color: #000; }
+        label { font-size: 13px; color: #8b949e; margin-bottom: -10px; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h2>ID Card Generator</h2>
+    <h2>NID GENERATOR PRO - BDCS</h2>
 
-    <div class="card-box">
-        <canvas id="idCanvas" width="800" height="500"></canvas>
+    <div class="canvas-container">
+        <canvas id="nidCanvas" width="1280" height="830"></canvas>
     </div>
 
-    <div class="form-container">
+    <div class="editor-panel">
         <input type="text" id="nameBn" placeholder="নাম (বাংলা)">
         <input type="text" id="nameEn" placeholder="Name (English)">
-        <input type="text" id="fatherName" placeholder="পিতার নাম">
-        <input type="text" id="motherName" placeholder="মাতার নাম">
+        <input type="text" id="father" placeholder="পিতার নাম">
+        <input type="text" id="mother" placeholder="মাতার নাম">
+        <input type="text" id="dob" placeholder="Date of Birth (e.g. 01 Jan 1990)">
+        <input type="text" id="idNo" placeholder="ID No">
         
-        <label>জন্ম তারিখ:</label>
-        <input type="date" id="dob">
-        
-        <input type="text" id="idNumber" placeholder="ID No (যেমন: 1987654321)">
-        
-        <label>প্রোফাইল ছবি আপলোড করুন:</label>
-        <input type="file" id="imageInput" accept="image/*">
-
-        <div class="button-group">
-            <button class="gen-btn" onclick="drawCard()">জেনারেট কার্ড</button>
-            <button class="down-btn" onclick="downloadCard()">ডাউনলোড করুন</button>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+            <label>পাসপোর্ট ছবি:</label>
+            <input type="file" id="userPhoto" accept="image/*">
         </div>
+
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+            <label>লোগো ও শাপলা (ঐচ্ছিক):</label>
+            <input type="file" id="assetsInput" accept="image/*" multiple placeholder="Upload Logo & Shapla">
+        </div>
+        
+        <button onclick="renderNID()">কার্ড জেনারেট করুন</button>
+        <button style="background: #21262d; color: #fff; border: 1px solid #30363d;" onclick="downloadImage()">ডাউনলোড ইমেজ</button>
     </div>
-</div>
 
 <script>
-    const canvas = document.getElementById('idCanvas');
+    const canvas = document.getElementById('nidCanvas');
     const ctx = canvas.getContext('2d');
-    
-    // টেমপ্লেট ইমেজ লোড
-    const baseImage = new Image();
-    baseImage.src = 'nid_template.png'; // আপনার ফাইলের নাম এখানে দিন
 
-    baseImage.onload = () => {
-        ctx.drawImage(baseImage, 0, 0, canvas.width, canvas.height);
-    };
+    function renderNID() {
+        // ১. ব্যাকগ্রাউন্ড
+        ctx.fillStyle = "white";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    function drawCard() {
-        // প্রথমে ব্যাকগ্রাউন্ড ক্লিয়ার করে টেমপ্লেট ড্র করা
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.drawImage(baseImage, 0, 0, canvas.width, canvas.height);
+        // ২. ফ্রেম (Width 97%, Height 93%)
+        const fW = canvas.width * 0.97;
+        const fH = canvas.height * 0.93;
+        const fX = (canvas.width - fW) / 2;
+        const fY = (canvas.height - fH) / 2;
+        ctx.strokeStyle = "black";
+        ctx.lineWidth = 4;
+        ctx.strokeRect(fX, fY, fW, fH);
 
-        // ইনপুট ভ্যালু সংগ্রহ
-        const nameBn = document.getElementById('nameBn').value;
-        const nameEn = document.getElementById('nameEn').value;
-        const father = document.getElementById('fatherName').value;
-        const mother = document.getElementById('motherName').value;
-        const dob = document.getElementById('dob').value;
-        const idNo = document.getElementById('idNumber').value;
-
-        // টেক্সট স্টাইল (কালো রঙ)
+        // ৩. মাঝখানের দাগ (Width 97%, Height 1%)
         ctx.fillStyle = "black";
-        ctx.font = "bold 22px Arial";
+        ctx.fillRect(fX, 230, fW, 8);
 
-        // পজিশন সেট করা (আপনার ইমেজের এলাইনমেন্ট অনুযায়ী টিউন করা)
-        ctx.fillText(nameBn, 310, 155);
-        ctx.fillText(nameEn, 310, 205);
-        ctx.fillText(father, 310, 255);
-        ctx.fillText(mother, 310, 305);
-        
-        // জন্ম তারিখ (একটু ডানে সরিয়ে)
-        ctx.font = "bold 20px Arial";
-        ctx.fillText(dob, 450, 365);
+        // ৪. হেডার টেক্সট
+        ctx.textAlign = "center";
+        ctx.fillStyle = "black";
+        ctx.font = "bold 38px 'Hind Siliguri', Arial";
+        ctx.fillText("গণপ্রজাতন্ত্রী বাংলাদেশ সরকার", canvas.width/2 + 60, 75);
 
-        // আইডি নম্বর (লাল রঙ)
+        ctx.fillStyle = "rgb(0, 0, 144)"; // কালার কোড ১৪৪
+        ctx.font = "bold 23px Arial";
+        ctx.fillText("Government of the people's Republic of Bangladesh", canvas.width/2 + 60, 120);
+
         ctx.fillStyle = "red";
-        ctx.font = "bold 24px Arial";
-        ctx.fillText(idNo, 450, 415);
+        ctx.font = "bold 23px Arial";
+        ctx.fillText("National ID Card", 520, 175);
 
-        // ছবি প্রসেসিং
-        const imageFile = document.getElementById('imageInput').files[0];
-        if (imageFile) {
+        ctx.fillStyle = "black";
+        ctx.font = "bold 28px 'Hind Siliguri', Arial";
+        ctx.fillText("/ জাতীয় পরিচয় পত্র", 760, 175);
+
+        // ৫. ডাটা সেকশন
+        ctx.textAlign = "left";
+        const labelX = 350;
+        const valX = 480;
+
+        ctx.font = "33px 'Hind Siliguri', Arial";
+        ctx.fillText("নাম:", labelX, 300);
+        ctx.font = "bold 33px 'Hind Siliguri', Arial";
+        ctx.fillText(document.getElementById('nameBn').value, valX, 300);
+
+        ctx.font = "27px Arial";
+        ctx.fillText("Name:", labelX, 370);
+        ctx.font = "bold 28px Arial";
+        ctx.fillText(document.getElementById('nameEn').value.toUpperCase(), valX, 370);
+
+        ctx.font = "27px 'Hind Siliguri', Arial";
+        ctx.fillText("পিতা:", labelX, 440);
+        ctx.font = "bold 29px 'Hind Siliguri', Arial";
+        ctx.fillText(document.getElementById('father').value, valX, 440);
+
+        ctx.font = "27px 'Hind Siliguri', Arial";
+        ctx.fillText("মাতা:", labelX, 510);
+        ctx.font = "bold 29px 'Hind Siliguri', Arial";
+        ctx.fillText(document.getElementById('mother').value, valX, 510);
+
+        ctx.font = "27px Arial";
+        ctx.fillText("Date of birth:", labelX, 590);
+        ctx.fillStyle = "red";
+        ctx.font = "bold 27px Arial";
+        ctx.fillText(document.getElementById('dob').value, 550, 590);
+
+        ctx.fillStyle = "black";
+        ctx.font = "bold 27px Arial";
+        ctx.fillText("ID No:", labelX, 670);
+        ctx.fillStyle = "red";
+        ctx.font = "bold 32px Arial";
+        ctx.fillText(document.getElementById('idNo').value, 480, 670);
+
+        // ৬. পাসপোর্ট সাইজ ছবি (width 22% height 36%)
+        const pW = canvas.width * 0.22;
+        const pH = canvas.height * 0.36;
+        ctx.fillStyle = "rgba(128, 128, 128, 0.43)"; // মাটিয়া কালার অপাসিটি ৪৩%
+        ctx.fillRect(60, 270, pW, pH);
+
+        const photoInput = document.getElementById('userPhoto').files[0];
+        if (photoInput) {
             const reader = new FileReader();
-            reader.onload = function(event) {
-                const userImg = new Image();
-                userImg.onload = function() {
-                    // বাম পাশের বক্সে ছবি সেট করা (x, y, width, height)
-                    ctx.drawImage(userImg, 55, 55, 185, 210);
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    ctx.drawImage(img, 60, 270, pW, pH);
                 }
-                userImg.src = event.target.result;
+                img.src = e.target.result;
             }
-            reader.readAsDataURL(imageFile);
+            reader.readAsDataURL(photoInput);
+        }
+
+        // ৭. লোগো ও শাপলা লোড (যদি ফাইল ইনপুট দেওয়া হয়)
+        // নোট: আপনি আপনার প্রজেক্ট ফোল্ডারে logo.png এবং shapla.png রাখলে এই অংশটি অটোমেটিক কাজ করবে।
+        drawAsset('logo.png', 120, 130, canvas.width * 0.11, canvas.height * 0.17); // লোগো ১১% ১৭%
+        drawAsset('shapla.png', 750, 520, canvas.width * 0.53, canvas.height * 0.53, 0.43); // শাপলা ৫৩% অপাসিটি ৪৩%
+    }
+
+    function drawAsset(src, x, y, w, h, alpha = 1.0) {
+        const img = new Image();
+        img.src = src;
+        img.onload = function() {
+            ctx.save();
+            ctx.globalAlpha = alpha;
+            // শাপলার ক্ষেত্রে সেন্টার এলাইনমেন্ট
+            if(src === 'shapla.png') {
+                ctx.drawImage(img, x - w/2, y - h/2, w, h);
+            } else {
+                ctx.drawImage(img, x - w/2, y - h/2, w, h);
+            }
+            ctx.restore();
         }
     }
 
-    function downloadCard() {
+    function downloadImage() {
         const link = document.createElement('a');
-        link.download = 'BDCS_ID_Card.png';
-        link.href = canvas.toDataURL('image/png');
+        link.download = 'NID_BDCS_Project.png';
+        link.href = canvas.toDataURL();
         link.click();
     }
-</script>
 
+    window.onload = renderNID;
+</script>
 </body>
 </html>

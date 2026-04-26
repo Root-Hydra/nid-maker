@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ID Card Generator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h2>ID Card Generator</h2>
+        
+        <div class="card-box">
+            <canvas id="idCardCanvas" width="600" height="360"></canvas>
+        </div>
+
+        <div class="form-container">
+            <input type="text" id="name" placeholder="নাম (বাংলা)">
+            <input type="text" id="nameEng" placeholder="Name (English)">
+            <input type="text" id="father" placeholder="পিতার নাম">
+            <input type="text" id="mother" placeholder="মাতার নাম">
+            <input type="date" id="dob">
+            <input type="text" id="idNo" placeholder="ID No (১০-১৭ ডিজিট)">
+            <input type="file" id="photoInput" accept="image/*">
+            <button onclick="generateCard()">জেনারেট কার্ড</button>
+            <button id="downloadBtn">ডাউনলোড করুন</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

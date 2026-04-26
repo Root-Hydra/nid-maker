@@ -1,0 +1,45 @@
+body {
+    background-color: #0d1117;
+    color: #00ff41;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+.container {
+    max-width: 700px;
+    text-align: center;
+}
+
+.card-box {
+    margin-bottom: 20px;
+    border: 2px solid #00ff41;
+    border-radius: 10px;
+    overflow: hidden;
+    background: white;
+}
+
+canvas {
+    max-width: 100%;
+}
+
+.form-container input {
+    width: 90%;
+    padding: 10px;
+    margin: 5px 0;
+    background: #161b22;
+    border: 1px solid #30363d;
+    color: white;
+    border-radius: 5px;
+}
+
+button {
+    padding: 10px 20px;
+    margin-top: 10px;
+    background: #00ff41;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    color: black;
+}

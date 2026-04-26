@@ -3,30 +3,198 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ID Card Generator</title>
-    <link rel="stylesheet" href="style.css">
+    <title>BDCS ID Generator</title>
+    <style>
+        /* CSS Section */
+        body {
+            background-color: #0d1117;
+            color: #00ff41;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        h2 { text-shadow: 0 0 10px #00ff41; }
+
+        .container {
+            width: 100%;
+            max-width: 650px;
+            text-align: center;
+        }
+
+        .card-box {
+            background: #161b22;
+            padding: 10px;
+            border: 2px solid #00ff41;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.3);
+            display: flex;
+            justify-content: center;
+        }
+
+        canvas {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+
+        .form-container {
+            display: grid;
+            gap: 12px;
+            background: #161b22;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #30363d;
+        }
+
+        input {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            padding: 12px;
+            color: #fff;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #00ff41;
+            box-shadow: 0 0 8px rgba(0, 255, 65, 0.5);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+
+        .gen-btn { background: #00ff41; color: #000; }
+        .gen-btn:hover { background: #00cc33; transform: scale(1.02); }
+
+        .down-btn { background: #21262d; color: #c9d1d9; border: 1px solid #30363d; }
+        .down-btn:hover { background: #30363d; color: #fff; }
+
+        label {
+            text-align: left;
+            font-size: 12px;
+            color: #8b949e;
+            margin-bottom: -8px;
+            margin-left: 5px;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h2>ID Card Generator</h2>
-        
-        <div class="card-box">
-            <canvas id="idCardCanvas" width="600" height="360"></canvas>
-        </div>
 
-        <div class="form-container">
-            <input type="text" id="name" placeholder="নাম (বাংলা)">
-            <input type="text" id="nameEng" placeholder="Name (English)">
-            <input type="text" id="father" placeholder="পিতার নাম">
-            <input type="text" id="mother" placeholder="মাতার নাম">
-            <input type="date" id="dob">
-            <input type="text" id="idNo" placeholder="ID No (১০-১৭ ডিজিট)">
-            <input type="file" id="photoInput" accept="image/*">
-            <button onclick="generateCard()">জেনারেট কার্ড</button>
-            <button id="downloadBtn">ডাউনলোড করুন</button>
-        </div>
+<div class="container">
+    <h2>ID Card Generator</h2>
+
+    <div class="card-box">
+        <canvas id="idCanvas" width="800" height="500"></canvas>
     </div>
 
-    <script src="script.js"></script>
+    <div class="form-container">
+        <input type="text" id="nameBn" placeholder="নাম (বাংলা)">
+        <input type="text" id="nameEn" placeholder="Name (English)">
+        <input type="text" id="fatherName" placeholder="পিতার নাম">
+        <input type="text" id="motherName" placeholder="মাতার নাম">
+        
+        <label>জন্ম তারিখ:</label>
+        <input type="date" id="dob">
+        
+        <input type="text" id="idNumber" placeholder="ID No (যেমন: 1987654321)">
+        
+        <label>প্রোফাইল ছবি আপলোড করুন:</label>
+        <input type="file" id="imageInput" accept="image/*">
+
+        <div class="button-group">
+            <button class="gen-btn" onclick="drawCard()">জেনারেট কার্ড</button>
+            <button class="down-btn" onclick="downloadCard()">ডাউনলোড করুন</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const canvas = document.getElementById('idCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    // টেমপ্লেট ইমেজ লোড
+    const baseImage = new Image();
+    baseImage.src = 'nid_template.png'; // আপনার ফাইলের নাম এখানে দিন
+
+    baseImage.onload = () => {
+        ctx.drawImage(baseImage, 0, 0, canvas.width, canvas.height);
+    };
+
+    function drawCard() {
+        // প্রথমে ব্যাকগ্রাউন্ড ক্লিয়ার করে টেমপ্লেট ড্র করা
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(baseImage, 0, 0, canvas.width, canvas.height);
+
+        // ইনপুট ভ্যালু সংগ্রহ
+        const nameBn = document.getElementById('nameBn').value;
+        const nameEn = document.getElementById('nameEn').value;
+        const father = document.getElementById('fatherName').value;
+        const mother = document.getElementById('motherName').value;
+        const dob = document.getElementById('dob').value;
+        const idNo = document.getElementById('idNumber').value;
+
+        // টেক্সট স্টাইল (কালো রঙ)
+        ctx.fillStyle = "black";
+        ctx.font = "bold 22px Arial";
+
+        // পজিশন সেট করা (আপনার ইমেজের এলাইনমেন্ট অনুযায়ী টিউন করা)
+        ctx.fillText(nameBn, 310, 155);
+        ctx.fillText(nameEn, 310, 205);
+        ctx.fillText(father, 310, 255);
+        ctx.fillText(mother, 310, 305);
+        
+        // জন্ম তারিখ (একটু ডানে সরিয়ে)
+        ctx.font = "bold 20px Arial";
+        ctx.fillText(dob, 450, 365);
+
+        // আইডি নম্বর (লাল রঙ)
+        ctx.fillStyle = "red";
+        ctx.font = "bold 24px Arial";
+        ctx.fillText(idNo, 450, 415);
+
+        // ছবি প্রসেসিং
+        const imageFile = document.getElementById('imageInput').files[0];
+        if (imageFile) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const userImg = new Image();
+                userImg.onload = function() {
+                    // বাম পাশের বক্সে ছবি সেট করা (x, y, width, height)
+                    ctx.drawImage(userImg, 55, 140, 185, 210);
+                }
+                userImg.src = event.target.result;
+            }
+            reader.readAsDataURL(imageFile);
+        }
+    }
+
+    function downloadCard() {
+        const link = document.createElement('a');
+        link.download = 'BDCS_ID_Card.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+    }
+</script>
+
 </body>
 </html>
